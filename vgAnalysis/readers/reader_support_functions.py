@@ -28,8 +28,8 @@ def get_indices_npts(coords, minX, maxX):
     Input
     -----
         x1, x2: coordinates of the snapshot window
-        x1min, x2min: lower bound of the POD window
-        x1max, x2max: upper bound of the POD window
+        x1min, x2min, x3max: lower bound of the POD window
+        x1max, x2max, x3max: upper bound of the POD window
 
     Output
     ------
@@ -86,7 +86,7 @@ def get_time_dir(caseDir, configFile):
         folder = timeStr
 
     return folder
-    
+
 
 def is_number(s):
     '''
@@ -105,12 +105,12 @@ def get_number_of_cols(fname, skiprows=0):
     with open(fname) as f:
         for line in f:
             count += 1
-            
+
             if count > skiprows:
                 line = re.split(r'[(|)|\s]', line)
                 while '' in line:
                     line.remove('')
-                    
+
                 try:
                     temp = float( line[0] )
                     nCols = len(line)
@@ -119,5 +119,5 @@ def get_number_of_cols(fname, skiprows=0):
                     continue
 
             else: continue
-                
+
     return nCols
