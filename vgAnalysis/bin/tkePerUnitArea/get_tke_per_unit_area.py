@@ -41,10 +41,6 @@ def get_tke_per_unit_area(configFile):
     minX['x2'] = float( configDict["x2min"] ) 
     maxX['x1'] = float( configDict["x1max"] ) 
     maxX['x2'] = float( configDict["x2max"] )    
-
-    # area of the plane:
-    area = abs( maxX['x1'] - minX['x1'] ) * \
-           abs( maxX['x2'] - minX['x2'] )
     
     # get the plane coordinate and the vorticity center:
     coordPlane = np.zeros(nPlanes)
@@ -63,6 +59,9 @@ def get_tke_per_unit_area(configFile):
         indices, nPts = get_indices_npts(coords, minX, maxX)
         x1, x2        = coords[indices, 0], coords[indices, 1]
         coordPlane[i] = data[0, normalCol]/h
+
+        # calculate area of the plane:
+        area = abs( x1.max() - x1.min() ) * abs( x2.max() - x2.min() )
 
         # tke data:
         tke = data[indices, 3] + data[indices, 6] + data[indices, 8]
