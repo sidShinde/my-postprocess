@@ -1,6 +1,6 @@
 import numpy as np
 import os
-from update_progress import *
+from tqdm import tqdm
 from vgAnalysis.readers.reader_support_functions import *
 from vgAnalysis.readers.reader import *
 
@@ -47,7 +47,7 @@ def get_tke_per_unit_area(configFile):
     tkePerArea = np.zeros(nPlanes)
 
     print('\n calculating tke per unit area ...')
-    for i in range(nPlanes):
+    for i in tqdm( range(nPlanes), ncols=100 ):
         dataPath = filePath + '/UPrime2Mean_' + patchName + str(i+1) + '.raw'
 
         coordCols, normalCol = get_columns(dir1, dir2)
@@ -66,8 +66,6 @@ def get_tke_per_unit_area(configFile):
         # tke data:
         tke = data[indices, 3] + data[indices, 6] + data[indices, 8]
         tkePerArea[i] = np.sum( tke ) / (area * ubar**2)
-
-        update_progress((i+1)/nPlanes)
     
     return coordPlane, tkePerArea
     

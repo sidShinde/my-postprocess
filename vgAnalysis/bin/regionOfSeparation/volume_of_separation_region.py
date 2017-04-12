@@ -1,6 +1,5 @@
 import numpy as np
 import os
-from update_progress import *
 from vgAnalysis.readers.reader_support_functions import *
 from vgAnalysis.readers.reader import *
 
@@ -42,15 +41,12 @@ def volume_of_separation_region(configFile):
     try:
         print('  - ccx')
         coords  = get_internal_field(filePath + '/ccx', skiprows=22)
-        #print(' ccx shape: ', ccx.shape)
 
         print('  - ccy')
         coords  = np.hstack( ( coords, get_internal_field(filePath + '/ccy', skiprows=22) ) )
-        #print(' ccy shape: ', ccy.shape)
 
         print('  - ccz')
         coords  = np.hstack( ( coords, get_internal_field(filePath + '/ccz', skiprows=22) ) )
-        #print(' ccz shape: ', ccz.shape)
 
         print('  - V')
         cellVol = get_internal_field(filePath + '/V', skiprows=22)
