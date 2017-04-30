@@ -28,7 +28,7 @@ def main():
         os.mkdir(caseDir)
 
     fname = caseDir + '/vorticity_center.csv'
-    np.savetxt(fname, solution.T, fmt='%.1f', 
+    np.savetxt(fname, solution.T, fmt='%.4f', 
                delimiter=', ', newline='\n', 
                header='x/h, vortex-center (y/h), vortex-center (z/h), distance-from-1st-center/h')
 
