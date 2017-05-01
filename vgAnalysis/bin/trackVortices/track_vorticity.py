@@ -1,6 +1,6 @@
 import numpy as np
 import os
-from update_progress import *
+from tqdm import tqdm
 from vgAnalysis.readers.reader_support_functions import *
 from vgAnalysis.readers.reader import *
 
@@ -50,7 +50,7 @@ def track_vorticity_center(configFile):
     vorCenterDist = np.zeros(nPlanes)
 
     print('\n calculating vorticity centers ...')
-    for i in range(nPlanes):
+    for i in tqdm( range(nPlanes), ncols=100 ):
         dataPath = filePath + '/vorticityMean_' + patchName + str(i+1) + '.raw'
 
         coordCols, normalCol = get_columns(dir1, dir2)
@@ -75,8 +75,6 @@ def track_vorticity_center(configFile):
             vorCenterDist[i] = 0
         else:
             vorCenterDist[i] = np.linalg.norm(vorCenter[i, :] - vorCenter[0, :])
-
-        update_progress((i+1)/nPlanes)
     
     return coordPlane, vorCenter, vorCenterDist
 
