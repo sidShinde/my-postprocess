@@ -71,7 +71,7 @@ def get_data(fname, skiprows=0):
 
                 except:
                     continue
-                    
+
             # skip rows
             else: continue
 
@@ -84,12 +84,11 @@ def config_to_dict(configFile):
     '''
 
     configDict = {}
-    points = []
-
     for line in configFile:
+        # if comment or newline:
         if (line[0] == '#') or (line == '\n'):
             continue
-
+        # read data:
         else:
             configDict[line.split()[0]] = line.split()[1]
 
