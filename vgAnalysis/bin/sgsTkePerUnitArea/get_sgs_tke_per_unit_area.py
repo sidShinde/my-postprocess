@@ -64,7 +64,7 @@ def get_sgs_tke_per_unit_area(configFile):
         area = abs( x1.max() - x1.min() ) * abs( x2.max() - x2.min() )
 
         # tke data:
-        sgsTke = data[indices, 4]
+        sgsTke = data[indices, 3]
         sgsTkePerArea[i] = np.sum( sgsTke ) / (area * ubar**2)
     
     return coordPlane, sgsTkePerArea
