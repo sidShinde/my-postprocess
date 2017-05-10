@@ -20,7 +20,7 @@ def main():
     configFile = open(args.config, mode='r')
 
     coordPlane, sgsTkePerArea = get_sgs_tke_per_unit_area(configFile)
-    solution = np.vstack((coordPlane, tkePerArea))
+    solution = np.vstack((coordPlane, sgsTkePerArea))
 
     caseDir = os.getcwd()
     caseDir = caseDir + '/postProcessing/vgAnalysis'

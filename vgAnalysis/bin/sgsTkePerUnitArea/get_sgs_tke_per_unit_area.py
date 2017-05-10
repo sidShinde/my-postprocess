@@ -44,7 +44,7 @@ def get_sgs_tke_per_unit_area(configFile):
     
     # get the plane coordinate and the vorticity center:
     coordPlane = np.zeros(nPlanes)
-    tkePerArea = np.zeros(nPlanes)
+    sgsTkePerArea = np.zeros(nPlanes)
 
     print('\n calculating tke per unit area ...')
     for i in tqdm( range(nPlanes), ncols=100 ):
