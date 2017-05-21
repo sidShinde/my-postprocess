@@ -12,6 +12,7 @@ setup(name='vgAnalysis',
               'plotVorticityCenter=vgAnalysis.bin.trackVortices.plot_vorticity_center:main',
               'writeTkePerArea=vgAnalysis.bin.tkePerUnitArea.write_tke_per_unit_area:main',
               'writeSgsTkePerArea=vgAnalysis.bin.sgsTkePerUnitArea.write_sgs_tke_per_unit_area:main',
+              'writeTkeStdDev=vgAnalysis.bin.tkeStdDev.write_tke_std_dev:main',
               'writeSeparationVolume=vgAnalysis.bin.regionOfSeparation.write_separation_volume:main'
               ]
           },
