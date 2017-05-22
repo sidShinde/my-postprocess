@@ -46,7 +46,7 @@ def get_tke_std_dev(configFile):
     coordPlane = np.zeros(nPlanes)
     tkeStdDev  = np.zeros(nPlanes)
 
-    print('\n calculating tke per unit area ...')
+    print('\n calculating tke standard deviation ...')
     for i in tqdm( range(nPlanes), ncols=100 ):
         dataPath = filePath + '/UPrime2Mean_' + patchName + str(i+1) + '.raw'
 
