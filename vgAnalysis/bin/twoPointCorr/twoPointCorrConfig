@@ -1,0 +1,17 @@
+# number of planes
+nPlanes           1
+
+# name of the plane
+patchName         xNormal
+
+# boundary layer thickness [m]
+delta             0.01
+
+# height from the bottom-wall to be considered [y/delta]
+yw                1
+
+# number of points along wall-normal direction
+nPts              30
+
+# number of time-dirs to be considered
+nTimeDirs         100
