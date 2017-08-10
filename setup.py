@@ -13,7 +13,8 @@ setup(name='vgAnalysis',
               'writeTkePerArea=vgAnalysis.bin.tkePerUnitArea.write_tke_per_unit_area:main',
               'writeSgsTkePerArea=vgAnalysis.bin.sgsTkePerUnitArea.write_sgs_tke_per_unit_area:main',
               'writeTkeStdDev=vgAnalysis.bin.tkeStdDev.write_tke_std_dev:main',
-              'writeSeparationVolume=vgAnalysis.bin.regionOfSeparation.write_separation_volume:main'
+              'writeSeparationVolume=vgAnalysis.bin.regionOfSeparation.write_separation_volume:main',
+              'writeTwoPointCorr=vgAnalysis.bin.twoPointCorr.write_two_point_corr:main'
               ]
           },
       install_requires=[
