@@ -1,6 +1,7 @@
 import numpy as np
 import os
 from tqdm import tqdm
+from scipy.interpolate import griddata
 from vgAnalysis.readers.reader_support_functions import *
 from vgAnalysis.readers.reader import *
 
@@ -57,9 +58,12 @@ def two_point_corr_matrix(filePath, arrName, timeDirs, delta, yw, nPts):
         ycoord = np.linspace( ymin, yw, nPts )
         zGrid, yGrid = np.meshgrid( zcoord, ycoord )
 
-        upx = griddata( points[:, 1:3], UPrime[:, 0], (zGrid, yGrid), method='linear')
-        upy = griddata( points[:, 1:3], UPrime[:, 1], (zGrid, yGrid), method='linear')
-        upz = griddata( points[:, 1:3], UPrime[:, 2], (zGrid, yGrid), method='linear')
+        upx = griddata( (points[:, 2], points[:, 1]), UPrime[:, 0],
+                      (zGrid, yGrid), method='linear' )
+        upy = griddata( (points[:, 2], points[:, 1]), UPrime[:, 1],
+                      (zGrid, yGrid), method='linear')
+        upz = griddata( (points[:, 2], points[:, 1]), UPrime[:, 2],
+                      (zGrid, yGrid), method='linear')
 
         # number of points in y and z:
         [ny, nz] = upx.shape

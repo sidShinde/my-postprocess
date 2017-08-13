@@ -24,24 +24,24 @@ def get_sgs_tke_per_unit_area(configFile):
     filePath  = os.getcwd()
     filePath  = filePath + '/postProcessing/surfaces'
     tDir      = get_time_dir(filePath, configDict)
-    filePath  = filePath + '/' + tDir 
+    filePath  = filePath + '/' + tDir
 
     # non-dim parameters:
-    h         = float( configDict["h"] ) 
+    h         = float( configDict["h"] )
     ubar      = float( configDict["ubar"] )
 
     # patch and AOI details:
     patchName = configDict["patchName"]
     nPlanes   = int( configDict["nPlanes"] )
-    dir1      = configDict["direction1"]     
-    dir2      = configDict["direction2"]     
+    dir1      = configDict["direction1"]
+    dir2      = configDict["direction2"]
 
     minX, maxX = dict(), dict()
-    minX['x1'] = float( configDict["x1min"] ) 
-    minX['x2'] = float( configDict["x2min"] ) 
-    maxX['x1'] = float( configDict["x1max"] ) 
-    maxX['x2'] = float( configDict["x2max"] )    
-    
+    minX['x1'] = float( configDict["x1min"] )
+    minX['x2'] = float( configDict["x2min"] )
+    maxX['x1'] = float( configDict["x1max"] )
+    maxX['x2'] = float( configDict["x2max"] )
+
     # get the plane coordinate and the vorticity center:
     coordPlane = np.zeros(nPlanes)
     sgsTkePerArea = np.zeros(nPlanes)
@@ -66,11 +66,5 @@ def get_sgs_tke_per_unit_area(configFile):
         # tke data:
         sgsTke = data[indices, 3]
         sgsTkePerArea[i] = np.sum( sgsTke ) / (area * ubar**2)
-    
+
     return coordPlane, sgsTkePerArea
-    
-    
-
-
-    
-

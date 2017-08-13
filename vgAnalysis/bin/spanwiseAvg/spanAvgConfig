@@ -1,0 +1,17 @@
+# quantities to average
+qty1 UMean
+qty2 UPrime2Mean
+
+# ref length [m]
+h  0.006
+
+# name of the plane:
+patchName	xNormal
+
+# number of planes
+nPlanes      	6
+
+# time directory [latestTime or 'float value']
+tDir            latestTime
+
+# end of file

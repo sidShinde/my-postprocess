@@ -1,5 +1,8 @@
 build
 dist
 vgAnalysis.egg-info
+vgAnalysis/__pycache__
+vgAnalysis/readers/__pycache__
+vgAnalysis/bin/__init__.py~
 
 *~

@@ -8,7 +8,7 @@ from .get_sgs_tke_per_unit_area import *
 def main():
     parser = argparse.ArgumentParser(description='calculate the turbulent KE \
     per unit area in the separation region')
-    
+
     parser.add_argument('-config',
                         type=str,
                         help='file with the essential inputs',
@@ -25,10 +25,10 @@ def main():
     caseDir = os.getcwd()
     caseDir = caseDir + '/postProcessing/vgAnalysis'
     if not os.path.exists(caseDir):
-        os.mkdir(caseDir)
+        os.mkdirs(caseDir)
 
     fname = caseDir + '/sgs_tke_per_unit_area.csv'
-    np.savetxt(fname, solution.T, fmt='%.1f, %1.2e', 
+    np.savetxt(fname, solution.T, fmt='%.1f, %1.2e',
                delimiter=', ', newline='\n', header='x/h, sgs_tke/area')
 
 

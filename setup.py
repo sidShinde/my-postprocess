@@ -14,12 +14,14 @@ setup(name='vgAnalysis',
               'writeSgsTkePerArea=vgAnalysis.bin.sgsTkePerUnitArea.write_sgs_tke_per_unit_area:main',
               'writeTkeStdDev=vgAnalysis.bin.tkeStdDev.write_tke_std_dev:main',
               'writeSeparationVolume=vgAnalysis.bin.regionOfSeparation.write_separation_volume:main',
-              'writeTwoPointCorr=vgAnalysis.bin.twoPointCorr.write_two_point_corr:main'
+              'writeTwoPointCorr=vgAnalysis.bin.twoPointCorr.write_two_point_corr:main',
+              'writeSpanAvg=vgAnalysis.bin.spanwiseAvg.write_spanwise_avg.py:main'
               ]
           },
       install_requires=[
           'numpy',
           'scipy',
           'matplotlib',
+          'tqdm',
           ],
       zip_safe=False)
