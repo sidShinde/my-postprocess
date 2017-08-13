@@ -25,7 +25,7 @@ def main():
     caseDir = os.getcwd()
     caseDir = caseDir + '/postProcessing/vgAnalysis/twoPointCoorData'
     if not os.path.exists(caseDir):
-        os.mkdirs(caseDir)
+        os.makedirs(caseDir)
 
     planeNames = list( twoPointCorrX.keys() )
 

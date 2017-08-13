@@ -1,6 +1,7 @@
 import numpy as np
 import os
 import argparse
+from tqdm import tqdm
 from vgAnalysis.readers.reader_support_functions import *
 from vgAnalysis.readers.reader import *
 from .get_spanwise_avg import *
@@ -22,7 +23,7 @@ def main():
 
     # read data from configFile
     filePath = os.getcwd()
-    filePath = filePath + 'postProcessing/surfaces'
+    filePath = filePath + '/postProcessing/surfaces'
     tDir     = get_time_dir(filePath, configDict)
     filePath = filePath + '/' + tDir
 
@@ -42,7 +43,7 @@ def main():
     caseDir = os.getcwd()
     caseDir = caseDir + '/postProcessing/vgAnalysis/spanwiseAvg'
     if not os.path.exists(caseDir):
-        os.mkdirs(caseDir)
+        os.makedirs(caseDir)
 
     print('\n begin averaging ...')
     for i in range( len(qty) ):
@@ -70,7 +71,7 @@ def main():
             else:
                 raise ValueError('Oops! Something went wrong in averaging ...')
 
-            np.savetxt(fname, avg, fmt='%.3f', delimiter=', ',
+            np.savetxt(fname, avg, fmt='%1.4e', delimiter=', ',
                        newline='\n', header=hLine)
 
 if __name__=='__main__':
