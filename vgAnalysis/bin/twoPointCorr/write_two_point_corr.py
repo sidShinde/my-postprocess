@@ -31,23 +31,23 @@ def main():
 
     for name in planeNames:
         fname = caseDir + '/two_point_coor_x_' + name + '.csv'
-        np.savetxt(fname, twoPointCorrX[name], fmt='%.3f', delimiter=', ',
+        np.savetxt(fname, twoPointCorrX[name], fmt='%1.4e', delimiter=', ',
                    newline='\n')
 
         fname = caseDir + '/two_point_coor_y_' + name + '.csv'
-        np.savetxt(fname, twoPointCorrY[name], fmt='%.3f', delimiter=', ',
+        np.savetxt(fname, twoPointCorrY[name], fmt='%1.4e', delimiter=', ',
                    newline='\n')
 
         fname = caseDir + '/two_point_coor_z_' + name + '.csv'
-        np.savetxt(fname, twoPointCorrZ[name], fmt='%.3f', delimiter=', ',
+        np.savetxt(fname, twoPointCorrZ[name], fmt='%1.4e', delimiter=', ',
                    newline='\n')
 
         fname = caseDir + '/ycoord_' + name + '.csv'
-        np.savetxt(fname, ycoord[name], fmt='%.3f', delimiter=', ',
+        np.savetxt(fname, ycoord[name], fmt='%1.4e', delimiter=', ',
                    newline='\n')
 
         fname = caseDir + '/zcoord_' + name + '.csv'
-        np.savetxt(fname, zcoord[name], fmt='%.3f', delimiter=', ',
+        np.savetxt(fname, zcoord[name], fmt='%1.4e', delimiter=', ',
                    newline='\n')
 
 

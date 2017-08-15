@@ -22,20 +22,20 @@ def get_two_point_corr(configFile):
 
     # get list of time-dirs
     nTimeDirs = int( configDict['nTimeDirs'] )
-    timeDirs  = os.listdir(filePath)
+    timeDirs  = np.sort( os.listdir(filePath) )
     try:
         timeDirs  = timeDirs[timeDirs.size - nTimeDirs:]
     except:
-        print('\n insufficient time directories for averaging ...')
+        ValueError('\n insufficient time directories for averaging ...')
 
     # dict to store two point correlation data
     twoPointCorrX, twoPointCorrY, twoPointCorrZ = dict(), dict(), dict()
     ycoord, zcoord = dict(), dict()
 
     for i in range( nPlanes ):
-        print('     working on plane ' + str(i) + ' ...')
+        print('     working on plane ' + str(i+1) + ' ...')
 
-        arrName = patchName + str(i)
+        arrName = patchName + str(i+1)
         twoPointCorrX[arrName], twoPointCorrY[arrName], twoPointCorrZ[arrName], \
         ycoord[arrName], zcoord[arrName] = \
         two_point_corr_matrix(filePath, arrName, timeDirs, delta, yw, nPts)
@@ -45,9 +45,10 @@ def get_two_point_corr(configFile):
 
 def two_point_corr_matrix(filePath, arrName, timeDirs, delta, yw, nPts):
 
-    for i in tqdm( range( len(timeDirs), ncols=100 ) ):
+    for i in tqdm( range( len(timeDirs) ), ncols=100 ):
         fpath  = filePath + '/' + timeDirs[i] + '/' + arrName
-        points = get_data( fpath + '/points', skiprows=3 )
+
+        points = get_data( fpath + '/faceCentres', skiprows=3 )
         U      = get_data( fpath + '/vectorField/U', skiprows=3)
         UMean  = get_data( fpath + '/vectorField/UMean', skiprows=3)
         UPrime = U - UMean
