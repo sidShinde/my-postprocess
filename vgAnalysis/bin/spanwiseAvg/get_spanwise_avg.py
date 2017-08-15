@@ -8,7 +8,7 @@ from vgAnalysis.readers.reader import *
 __all__ = ['get_spanwise_avg']
 
 def get_spanwise_avg(data, h):
-    
+
     # normalize lengths:
     data[:, :3] /= h
 
@@ -17,7 +17,7 @@ def get_spanwise_avg(data, h):
     ycoord[-1] = (ycoord[-1] + ycoord[-2])/2
 
     avg = ycoord
-    
+
     zcoord = np.unique( data[:, 2] )
     zcoord[0] = (zcoord[0] + zcoord[1])/2
     zcoord[-1] = (zcoord[-1] + zcoord[-2])/2

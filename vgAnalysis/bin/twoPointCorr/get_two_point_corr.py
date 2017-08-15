@@ -53,9 +53,16 @@ def two_point_corr_matrix(filePath, arrName, timeDirs, delta, yw, nPts):
         UPrime = U - UMean
 
         # interpolate data:
-        zcoord = np.unique( points[:, 2] ) / delta
-        ymin   = np.min( points[:, 1]/delta )
+        points[:, :3] /= delta
+        zcoord = np.unique( points[:, 2] )
+        zcoord[0] = (zcoord[0] + zcoord[1])/2
+        zcoord[-1] = (zcoord[-1] + zcoord[-2])/2
+
+        ymin   = np.min( points[:, 1] )
         ycoord = np.linspace( ymin, yw, nPts )
+        ycoord[0] = (ycoord[0] + ycoord[1])/2
+        ycoord[-1] = (ycoord[-1] + ycoord[-2])/2
+
         zGrid, yGrid = np.meshgrid( zcoord, ycoord )
 
         upx = griddata( (points[:, 2], points[:, 1]), UPrime[:, 0],
