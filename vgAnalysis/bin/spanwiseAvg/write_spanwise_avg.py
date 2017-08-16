@@ -7,8 +7,8 @@ from vgAnalysis.readers.reader import *
 from .get_spanwise_avg import *
 
 def main():
-    parser = argparse.ArgumentParser(description='calculate spanwise two point \
-    correlation at specific streamwise locations')
+    parser = argparse.ArgumentParser(description='calculate spanwise \
+    average at specific streamwise locations')
 
     parser.add_argument('-config',
                         type=str,
