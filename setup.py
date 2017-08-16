@@ -15,7 +15,8 @@ setup(name='vgAnalysis',
               'writeTkeStdDev=vgAnalysis.bin.tkeStdDev.write_tke_std_dev:main',
               'writeSeparationVolume=vgAnalysis.bin.regionOfSeparation.write_separation_volume:main',
               'writeTwoPointCorr=vgAnalysis.bin.twoPointCorr.write_two_point_corr:main',
-              'writeSpanAvg=vgAnalysis.bin.spanwiseAvg.write_spanwise_avg:main'
+              'writeSpanAvg=vgAnalysis.bin.spanwiseAvg.write_spanwise_avg:main',
+              'writeIntLengthScale=vgAnalysis.bin.intLengthScale.write_int_length_scale:main'
               ]
           },
       install_requires=[

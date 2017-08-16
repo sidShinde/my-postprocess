@@ -4,11 +4,11 @@ import argparse
 from tqdm import tqdm
 from vgAnalysis.readers.reader_support_functions import *
 from vgAnalysis.readers.reader import *
-from get_int_length_scale import *
+from .get_int_length_scale import *
 
 def main():
-    parser = argparse.ArgumentParser(description='calculate spanwise \
-    average at specific streamwise locations')
+    parser = argparse.ArgumentParser(description='calculate the integral \
+    length at specific streamwise locations given the two point correlation')
 
     parser.add_argument('-config',
                         type=str,
@@ -31,11 +31,9 @@ def main():
     tValue    = float( configDict['tValue'] )
 
     caseDir = os.getcwd()
-    caseDir = caseDir + '/postProcessing/vgAnalysis/intLengthScale'
+    caseDir = caseDir + '/postProcessing/vgAnalysis'
     if not os.path.exists(caseDir):
         os.makedirs(caseDir)
-
-    direction = ['x', 'y', 'z']
 
     for i in range( nPlanes ):
         print('     working on plane ' + str(i+1) + '...')
@@ -46,20 +44,26 @@ def main():
         fname = filePath + '/zcoord_' + patchName + str(i+1) + '.csv'
         zcoord = np.loadtxt(fname)
 
-        for j in len( direction ):
-            fname = filePath + '/two_point_coor_' + direction[j] +
+        fname = filePath + '/two_point_coor_' + 'x' + \
                     '_' + patchName + str(i+1) + '.csv'
-            data  = np.loadtxt(fname, delimiter=', ')
+        data  = np.loadtxt(fname, delimiter=', ')
+        tempVect = get_int_length_scale(data, zcoord, tValue)
+        iLArr = np.append([iLArr], [tempVect], axis=0)
 
-            if j == 1:
-                np.append([iLArr], [get_int_length_scale(data, zcoord, tValue)],
-                          axis=0)
-            else:
-                np.append(iLArr, [get_int_length_scale(data, zcoord, tValue)],
-                          axis=0)
+        fname = filePath + '/two_point_coor_' + 'y' + \
+                    '_' + patchName + str(i+1) + '.csv'
+        data  = np.loadtxt(fname, delimiter=', ')
+        tempVect = get_int_length_scale(data, zcoord, tValue)
+        iLArr = np.append(iLArr, [tempVect], axis=0)
+
+        fname = filePath + '/two_point_coor_' + 'z' + \
+                    '_' + patchName + str(i+1) + '.csv'
+        data  = np.loadtxt(fname, delimiter=', ')
+        tempVect = get_int_length_scale(data, zcoord, tValue)
+        iLArr = np.append(iLArr, [tempVect], axis=0)
 
         iLArr = iLArr.T
-        fname = caseDir + 'int_length_' + direction[j] + '_' +
+        fname = caseDir + '/int_length_' +  \
                 patchName + str(i+1) + '.csv'
         hLine = 'y/h, iL_x, iLy, iLz'
         np.savetxt(fname, iLArr, fmt='%1.4e', delimiter=', ',
