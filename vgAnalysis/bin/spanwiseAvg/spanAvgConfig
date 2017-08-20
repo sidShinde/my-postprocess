@@ -1,9 +1,15 @@
+# NOTE: always sample UMean surface data even if not
+# desired for spanwise average
+
 # quantities to average
 qty1 UMean
 qty2 UPrime2Mean
 
 # ref length [m]
 h  0.006
+
+# kinematic viscosity
+nu 1e-06
 
 # name of the plane:
 patchName	xNormal

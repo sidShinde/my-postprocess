@@ -26,19 +26,18 @@ def main():
     caseDir = caseDir + '/postProcessing/vgAnalysis/twoPointCorrData'
     if not os.path.exists(caseDir):
         os.makedirs(caseDir)
-
     planeNames = list( twoPointCorrX.keys() )
 
     for name in planeNames:
-        fname = caseDir + '/two_point_corr_x_' + name + '.csv'
+        fname = caseDir + '/Ruu_' + name + '.csv'
         np.savetxt(fname, twoPointCorrX[name], fmt='%1.4e', delimiter=', ',
                    newline='\n')
 
-        fname = caseDir + '/two_point_corr_y_' + name + '.csv'
+        fname = caseDir + '/Rvv_' + name + '.csv'
         np.savetxt(fname, twoPointCorrY[name], fmt='%1.4e', delimiter=', ',
                    newline='\n')
 
-        fname = caseDir + '/two_point_corr_z_' + name + '.csv'
+        fname = caseDir + '/Rww_' + name + '.csv'
         np.savetxt(fname, twoPointCorrZ[name], fmt='%1.4e', delimiter=', ',
                    newline='\n')
 

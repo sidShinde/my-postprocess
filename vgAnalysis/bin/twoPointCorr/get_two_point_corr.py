@@ -54,32 +54,35 @@ def two_point_corr_matrix(filePath, arrName, timeDirs, delta, yw, nPts):
         UPrime = U - UMean
 
         # interpolate data:
-        points[:, :3] /= delta
-        zcoord = np.unique( points[:, 2] )
-        zcoord[0] = (zcoord[0] + zcoord[1])/2
+        points     /= delta
+        zcoord     = np.unique( points[:, 2] )
+        zcoord[0]  = (zcoord[0] + zcoord[1])/2
         zcoord[-1] = (zcoord[-1] + zcoord[-2])/2
 
-        ymin   = np.min( points[:, 1] )
-        ycoord = np.linspace( ymin, yw, nPts )
-        ycoord[0] = (ycoord[0] + ycoord[1])/2
+        ymin       = np.min( points[:, 1] )
+        ycoord     = np.linspace( ymin, yw, nPts )
+        ycoord[0]  = (ycoord[0] + ycoord[1])/2
         ycoord[-1] = (ycoord[-1] + ycoord[-2])/2
 
         zGrid, yGrid = np.meshgrid( zcoord, ycoord )
 
+        #print('\n zGrid: \n', zGrid[:3, :3])
+        #print('\n yGrid: \n', yGrid[:3, :3])
+
         upx = griddata( (points[:, 2], points[:, 1]), UPrime[:, 0],
-                      (zGrid, yGrid), method='linear' )
+                      (zGrid, yGrid), method='cubic' )
         upy = griddata( (points[:, 2], points[:, 1]), UPrime[:, 1],
-                      (zGrid, yGrid), method='linear')
+                      (zGrid, yGrid), method='cubic')
         upz = griddata( (points[:, 2], points[:, 1]), UPrime[:, 2],
-                      (zGrid, yGrid), method='linear')
+                      (zGrid, yGrid), method='cubic')
 
         # number of points in y and z:
         [ny, nz] = upx.shape
 
         if i == 0:
-            tpcX = np.zeros([ny, nz-1])
-            tpcY = np.zeros([ny, nz-1])
-            tpcZ = np.zeros([ny, nz-1])
+            tpcX = np.zeros([ny, nz])
+            tpcY = np.zeros([ny, nz])
+            tpcZ = np.zeros([ny, nz])
 
             tpcX = two_point_corr_eval(upx, ny, nz)
             tpcY = two_point_corr_eval(upy, ny, nz)
@@ -98,26 +101,27 @@ def two_point_corr_matrix(filePath, arrName, timeDirs, delta, yw, nPts):
 
 
 def two_point_corr_eval(up, ny, nz):
-    tpc     = np.zeros([ny, nz-1])
-    counter = np.zeros(nz-1)
+    tpc = np.zeros([ny, nz])
 
     for i in range(ny):
+        counter = np.zeros(nz)
         for j in range(nz):
             # points on the left:
-            for lpts in range(0, j):
-                val = up[i, j] * up[i, lpts]
-                val /= np.square( up[i, j] )
-                tpc[i, abs(lpts-j)-1] += val
-                counter[ abs(lpts-j)-1 ] += 1
+            #for lpts in range(0, j):
+            #    val = up[i, j] * up[i, lpts]
+            #    val /= np.square( up[i, j] )
+            #    tpc[i, abs(lpts-j)] += val
+            #    counter[ abs(lpts-j) ] += 1.0
 
             # points on the right:
-            for rpts in range(j+1, nz):
+            for rpts in range(j, nz):
                 val = up[i, j] * up[i, rpts]
-                val /= np.square( up[i, j] )
-                tpc[i, abs(j-rpts)-1] += val
-                counter[ abs(j-rpts)-1 ] += 1
+                val = val / np.square( up[i, j] )
+                tpc[i, abs(j-rpts)] += val
+                counter[ abs(j-rpts) ] += 1.0
 
-            # normalization:
-            tpc[i, :] /= counter
+        #print('\n counter: \n', counter)
+        # normalization:
+        tpc[i, :] /= counter
 
     return tpc
