@@ -15,3 +15,6 @@ nPts              30
 
 # number of time-dirs to be considered
 nTimeDirs         100
+
+# Is the domain periodic in spanwise direction? (true/false)
+periodic          false

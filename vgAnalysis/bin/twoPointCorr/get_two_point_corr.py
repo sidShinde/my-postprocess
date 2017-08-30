@@ -1,5 +1,5 @@
 import numpy as np
-import os
+import os, math
 from tqdm import tqdm
 from scipy.interpolate import griddata
 from vgAnalysis.readers.reader_support_functions import *
@@ -19,6 +19,7 @@ def get_two_point_corr(configFile):
     delta     = float( configDict['delta'] )
     yw        = float( configDict['yw'] )
     nPts      = int( configDict['nPts'] )
+    periodic  = configDict['periodic']
 
     # get list of time-dirs
     nTimeDirs = int( configDict['nTimeDirs'] )
@@ -38,12 +39,12 @@ def get_two_point_corr(configFile):
         arrName = patchName + str(i+1)
         twoPointCorrX[arrName], twoPointCorrY[arrName], twoPointCorrZ[arrName], \
         ycoord[arrName], zcoord[arrName] = \
-        two_point_corr_matrix(filePath, arrName, timeDirs, delta, yw, nPts)
+        two_point_corr_matrix(filePath, arrName, timeDirs, delta, yw, nPts, periodic)
 
     return twoPointCorrX, twoPointCorrY, twoPointCorrZ, ycoord, zcoord
 
 
-def two_point_corr_matrix(filePath, arrName, timeDirs, delta, yw, nPts):
+def two_point_corr_matrix(filePath, arrName, timeDirs, delta, yw, nPts, periodic):
 
     for i in tqdm( range( len(timeDirs) ), ncols=100 ):
         fpath  = filePath + '/' + timeDirs[i] + '/' + arrName
@@ -54,8 +55,14 @@ def two_point_corr_matrix(filePath, arrName, timeDirs, delta, yw, nPts):
         UPrime = U - UMean
 
         # interpolate data:
-        points     /= delta
-        zcoord     = np.unique( points[:, 2] )
+        points /= delta
+        zcoord = np.unique( points[:, 2] )
+        nz     = zcoord.shape[0]
+
+        if periodic == 'true':
+            nz = math.floor( nz/ 2 )
+            zcoord = zcoord[nz:]
+
         zcoord[0]  = (zcoord[0] + zcoord[1])/2
         zcoord[-1] = (zcoord[-1] + zcoord[-2])/2
 
@@ -66,9 +73,6 @@ def two_point_corr_matrix(filePath, arrName, timeDirs, delta, yw, nPts):
 
         zGrid, yGrid = np.meshgrid( zcoord, ycoord )
 
-        #print('\n zGrid: \n', zGrid[:3, :3])
-        #print('\n yGrid: \n', yGrid[:3, :3])
-
         upx = griddata( (points[:, 2], points[:, 1]), UPrime[:, 0],
                       (zGrid, yGrid), method='cubic' )
         upy = griddata( (points[:, 2], points[:, 1]), UPrime[:, 1],
@@ -76,52 +80,42 @@ def two_point_corr_matrix(filePath, arrName, timeDirs, delta, yw, nPts):
         upz = griddata( (points[:, 2], points[:, 1]), UPrime[:, 2],
                       (zGrid, yGrid), method='cubic')
 
-        # number of points in y and z:
-        [ny, nz] = upx.shape
+        # number of points in y:
+        ny = nPts
 
         if i == 0:
             tpcX = np.zeros([ny, nz])
             tpcY = np.zeros([ny, nz])
             tpcZ = np.zeros([ny, nz])
 
-            tpcX = two_point_corr_eval(upx, ny, nz)
-            tpcY = two_point_corr_eval(upy, ny, nz)
-            tpcZ = two_point_corr_eval(upz, ny, nz)
+            tpcX = two_point_corr_eval(upx, ny, nz, periodic)
+            tpcY = two_point_corr_eval(upy, ny, nz, periodic)
+            tpcZ = two_point_corr_eval(upz, ny, nz, periodic)
 
         else:
-            tpcX += two_point_corr_eval(upx, ny, nz)
-            tpcY += two_point_corr_eval(upy, ny, nz)
-            tpcZ += two_point_corr_eval(upz, ny, nz)
+            tpcX += two_point_corr_eval(upx, ny, nz, periodic)
+            tpcY += two_point_corr_eval(upy, ny, nz, periodic)
+            tpcZ += two_point_corr_eval(upz, ny, nz, periodic)
 
     tpcX = tpcX/(i+1)
     tpcY = tpcY/(i+1)
     tpcZ = tpcZ/(i+1)
 
+    if periodic == 'true':
+        zcoord = zcoord - zcoord[0]
+
     return tpcX, tpcY, tpcZ, ycoord, zcoord
 
 
-def two_point_corr_eval(up, ny, nz):
+def two_point_corr_eval(up, ny, nz, periodic):
     tpc = np.zeros([ny, nz])
 
     for i in range(ny):
-        counter = np.zeros(nz)
         for j in range(nz):
-            # points on the left:
-            #for lpts in range(0, j):
-            #    val = up[i, j] * up[i, lpts]
-            #    val /= np.square( up[i, j] )
-            #    tpc[i, abs(lpts-j)] += val
-            #    counter[ abs(lpts-j) ] += 1.0
+            for k in range(0, nz-j):
+                counter = k + j
+                tpc[i, j]  = tpc[i, j] + up[i, k] * up[i, counter]
 
-            # points on the right:
-            for rpts in range(j, nz):
-                val = up[i, j] * up[i, rpts]
-                val = val / np.square( up[i, j] )
-                tpc[i, abs(j-rpts)] += val
-                counter[ abs(j-rpts) ] += 1.0
-
-        #print('\n counter: \n', counter)
-        # normalization:
-        tpc[i, :] /= counter
+        tpc[i, :] = tpc[i, :]/tpc[i, 0]
 
     return tpc

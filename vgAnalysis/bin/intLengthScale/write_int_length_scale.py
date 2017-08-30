@@ -31,7 +31,7 @@ def main():
     tValue    = float( configDict['tValue'] )
 
     caseDir = os.getcwd()
-    caseDir = caseDir + '/postProcessing/vgAnalysis'
+    caseDir = caseDir + '/postProcessing/vgAnalysis/intLengthScale'
     if not os.path.exists(caseDir):
         os.makedirs(caseDir)
 
@@ -44,27 +44,26 @@ def main():
         fname = filePath + '/zcoord_' + patchName + str(i+1) + '.csv'
         zcoord = np.loadtxt(fname)
 
-        fname = filePath + '/two_point_coor_' + 'x' + \
+        fname = filePath + '/Ruu' + \
                     '_' + patchName + str(i+1) + '.csv'
         data  = np.loadtxt(fname, delimiter=', ')
         tempVect = get_int_length_scale(data, zcoord, tValue)
         iLArr = np.append([iLArr], [tempVect], axis=0)
 
-        fname = filePath + '/two_point_coor_' + 'y' + \
+        fname = filePath + '/Rvv' + \
                     '_' + patchName + str(i+1) + '.csv'
         data  = np.loadtxt(fname, delimiter=', ')
         tempVect = get_int_length_scale(data, zcoord, tValue)
         iLArr = np.append(iLArr, [tempVect], axis=0)
 
-        fname = filePath + '/two_point_coor_' + 'z' + \
+        fname = filePath + '/Rww' + \
                     '_' + patchName + str(i+1) + '.csv'
         data  = np.loadtxt(fname, delimiter=', ')
         tempVect = get_int_length_scale(data, zcoord, tValue)
         iLArr = np.append(iLArr, [tempVect], axis=0)
 
         iLArr = iLArr.T
-        fname = caseDir + '/int_length_' +  \
-                patchName + str(i+1) + '.csv'
+        fname = caseDir + '/' + patchName + str(i+1) + '.csv'
         hLine = 'y/h, iL_x, iLy, iLz'
         np.savetxt(fname, iLArr, fmt='%1.4e', delimiter=', ',
                    newline='\n', header=hLine)
