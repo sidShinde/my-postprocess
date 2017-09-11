@@ -66,12 +66,15 @@ def main():
             get_yplus(umean, h, nu)
 
             solution = np.append([ycoord[pName]], [yplus[pName]], axis=0)
-            solution = np.concatenate((solution, UMean), axis=0)
+            solution = np.append(solution, UMean.T, axis=0)
             solution = solution.T
+
             fname = caseDir + '/UMean_' + pName + '.csv'
             hLine = 'y/h, y+, UMean_avg_x, UMean_avg_y, UMean_avg_z'
             np.savetxt(fname, solution, fmt='%1.4e', delimiter=', ',
                        newline='\n', header=hLine)
+
+            qty.remove['UMean']
         else:
             _, ycoord[pName], yplus[pName], yGrid[pName], zGrid[pName] = \
             get_yplus(umean, h, nu)
@@ -85,6 +88,7 @@ def main():
             fpath = filePath + '/' + qty[i] + '_' + pName + '.raw'
 
             data = get_data(fpath, skiprows=2)
+            data[:, :3] /= h
             avg  = get_spanwise_avg(data, yGrid[pName], zGrid[pName], h)
 
             solution = ycoord[pName]
@@ -96,11 +100,13 @@ def main():
                 solution = np.append(solution, [avg], axis=0)
                 hLine = 'y/h, y+, ' + qty[i] + '_avg'
             elif avg.ndim == 2 and avg.shape[1] == 3:
-                solution = np.concatenate((solution, avg), axis=0)
+                #solution = np.concatenate((solution, avg), axis=0)
+                solution = np.append(solution, avg.T, axis=0)
                 hLine = 'y/h, y+, ' + qty[i] + '_avg_x, ' + \
                         qty[i] + '_avg_y, ' + qty[i] + '_avg_z'
             elif avg.ndim == 2 and avg.shape[1] == 6:
-                solution = np.concatenate((solution, avg), axis=0)
+                #solution = np.concatenate((solution, avg), axis=0)
+                solution = np.append(solution, avg.T, axis=0)
                 hLine = 'y/h, y+, ' + qty[i] + '_avg_xx, ' + \
                         qty[i] + '_avg_xy, ' + qty[i] + '_avg_xz, ' + \
                         qty[i] + '_avg_yy, ' + qty[i] + '_avg_yz, ' + \
