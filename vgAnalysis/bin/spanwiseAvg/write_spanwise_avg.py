@@ -74,10 +74,12 @@ def main():
             np.savetxt(fname, solution, fmt='%1.4e', delimiter=', ',
                        newline='\n', header=hLine)
 
-            qty.remove['UMean']
         else:
             _, ycoord[pName], yplus[pName], yGrid[pName], zGrid[pName] = \
             get_yplus(umean, h, nu)
+
+    if checkUMean == True:
+        qty.remove('UMean')
 
     print('\n begin averaging ...')
     for i in range( len(qty) ):
