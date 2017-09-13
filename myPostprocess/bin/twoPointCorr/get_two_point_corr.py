@@ -18,7 +18,7 @@ def get_two_point_corr(filePath, arrName, timeDirs, delta, yw, nPts, periodic):
         UPrime = U - UMean
 
         # interpolate data:
-        points /= delta
+        points = points / delta
         zcoord = np.unique( points[:, 2] )
         nz     = zcoord.shape[0]
 

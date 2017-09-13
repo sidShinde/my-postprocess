@@ -18,6 +18,7 @@ def main():
 
     # parse the config:
     configFile = open(args.config, mode='r')
+    configDict = config_to_dict(configFile)
 
     caseDir = os.getcwd()
     filePath = caseDir + '/postProcessing/cuttingPlane'
@@ -48,7 +49,7 @@ def main():
 
         arrName = patchName + str(i+1)
 
-        Ruu, Rvv, Rzz, ycoord, zcoord = get_two_point_corr(filePath, arrName,
+        Ruu, Rvv, Rww, ycoord, zcoord = get_two_point_corr(filePath, arrName,
                                         timeDirs, delta, yw, nPts, periodic)
 
         fname = caseDir + '/Ruu_' + arrName + '.csv'
@@ -60,10 +61,10 @@ def main():
         fname = caseDir + '/Rww_' + arrName + '.csv'
         np.savetxt(fname, Rww, fmt='%1.4e', delimiter=', ', newline='\n')
 
-        fname = caseDir + '/ycoord_' + name + '.csv'
+        fname = caseDir + '/ycoord_' + arrName + '.csv'
         np.savetxt(fname, ycoord, fmt='%1.4e', delimiter=', ', newline='\n')
 
-        fname = caseDir + '/zcoord_' + name + '.csv'
+        fname = caseDir + '/zcoord_' + arrName + '.csv'
         np.savetxt(fname, zcoord, fmt='%1.4e', delimiter=', ', newline='\n')
 
 
