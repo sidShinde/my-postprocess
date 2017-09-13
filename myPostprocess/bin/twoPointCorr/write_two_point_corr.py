@@ -48,7 +48,7 @@ def main():
 
         arrName = patchName + str(i+1)
 
-        Ruu, Rvv, Rzz, ycoord, zcoord = two_point_corr_matrix(filePath, arrName,
+        Ruu, Rvv, Rzz, ycoord, zcoord = get_two_point_corr(filePath, arrName,
                                         timeDirs, delta, yw, nPts, periodic)
 
         fname = caseDir + '/Ruu_' + arrName + '.csv'
