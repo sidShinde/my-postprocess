@@ -1,0 +1,8 @@
+# two point correlation threshold
+tValue 0.2
+
+# number of planes
+nPlanes 1
+
+# plane name
+patchName xNormal

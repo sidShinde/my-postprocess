@@ -8,15 +8,15 @@ setup(name='myPostprocess',
       packages=find_packages(),
       entry_points = {
           'console_scripts':[
-              'writeVorticityCenter=myPostProcess.bin.trackVortices.write_vorticity_center:main',
-              'plotVorticityCenter=myPostProcess.bin.trackVortices.plot_vorticity_center:main',
-              'writeTkePerArea=myPostProcess.bin.tkePerUnitArea.write_tke_per_unit_area:main',
-              'writeSgsTkePerArea=myPostProcesss.bin.sgsTkePerUnitArea.write_sgs_tke_per_unit_area:main',
-              'writeTkeStdDev=myPostProcess.bin.tkeStdDev.write_tke_std_dev:main',
-              'writeSeparationVolume=myPostProcess.bin.regionOfSeparation.write_separation_volume:main',
-              'writeTwoPointCorr=myPostProcess.bin.twoPointCorr.write_two_point_corr:main',
-              'writeSpanAvg=myPostProcess.bin.spanwiseAvg.write_spanwise_avg:main',
-              'writeIntLengthScale=myPostProcess.bin.intLengthScale.write_int_length_scale:main'
+              'writeVorticityCenter=myPostprocess.bin.trackVortices.write_vorticity_center:main',
+              'plotVorticityCenter=myPostprocess.bin.trackVortices.plot_vorticity_center:main',
+              'writeTkePerArea=myPostprocess.bin.tkePerUnitArea.write_tke_per_unit_area:main',
+              'writeSgsTkePerArea=myPostprocesss.bin.sgsTkePerUnitArea.write_sgs_tke_per_unit_area:main',
+              'writeTkeStdDev=myPostprocess.bin.tkeStdDev.write_tke_std_dev:main',
+              'writeSeparationVolume=myPostprocess.bin.regionOfSeparation.write_separation_volume:main',
+              'writeTwoPointCorr=myPostprocess.bin.twoPointCorr.write_two_point_corr:main',
+              'writeSpanAvg=myPostprocess.bin.spanwiseAvg.write_spanwise_avg:main',
+              'writeIntLengthScale=myPostprocess.bin.intLengthScale.write_int_length_scale:main'
               ]
           },
       install_requires=[
