@@ -7,7 +7,7 @@ from vgAnalysis.readers.reader import *
 
 __all__ = ['get_two_point_corr']
 
-def two_point_corr_matrix(filePath, arrName, timeDirs, delta, yw, nPts, periodic):
+def get_two_point_corr(filePath, arrName, timeDirs, delta, yw, nPts, periodic):
 
     for i in tqdm( range( len(timeDirs) ), ncols=100 ):
         fpath  = filePath + '/' + timeDirs[i] + '/' + arrName
