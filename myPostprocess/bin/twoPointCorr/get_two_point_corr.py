@@ -7,34 +7,53 @@ from vgAnalysis.readers.reader import *
 
 __all__ = ['get_two_point_corr']
 
-def get_two_point_corr(filePath, arrName, timeDirs, delta, yw, nPts, periodic):
+def get_two_point_corr(filePath, arrName, timeDirs, delta, yw, nPts, periodic,
+                       rank, localN):
 
-    for i in tqdm( range( len(timeDirs) ), ncols=100 ):
+    if rank == 0:
+        minT = int(0)
+    else:
+        minT = int( np.sum( localN[:rank] ) )
+
+    maxT = int( np.sum( localN[:rank+1] ) )
+
+    for i in range( minT, maxT ):
+
+        # print periodic progress:
+        if (rank == 0) and (np.mod(i, int((maxT-minT)/10)+1 ) == 0):
+            print("       Computed about "+str(int(i/(maxT-minT)*100))+"%")
+        if (rank == 0) and (i == maxT-1):
+            print("       100% complete")
+
         fpath  = filePath + '/' + timeDirs[i] + '/' + arrName
 
-        points = get_data( fpath + '/faceCentres', skiprows=3 )
+        # read points only on the first iteration:
+        if (i == minT):
+            points = get_data( fpath + '/faceCentres', skiprows=3 )
+
+            # interpolate data:
+            points = points / delta
+            zcoord = np.unique( points[:, 2] )
+            nz     = zcoord.shape[0]
+
+            if periodic == 'true':
+                nz = math.floor( nz/ 2 )
+                zcoord = zcoord[nz:]
+
+            zcoord[0]  = (zcoord[0] + zcoord[1])/2
+            zcoord[-1] = (zcoord[-1] + zcoord[-2])/2
+
+            ymin       = np.min( points[:, 1] )
+            ycoord     = np.linspace( ymin, yw, nPts )
+            ycoord[0]  = (ycoord[0] + ycoord[1])/2
+            ycoord[-1] = (ycoord[-1] + ycoord[-2])/2
+
+            zGrid, yGrid = np.meshgrid( zcoord, ycoord )
+
+        # interpolate velocity field:
         U      = get_data( fpath + '/vectorField/U', skiprows=3)
         UMean  = get_data( fpath + '/vectorField/UMean', skiprows=3)
         UPrime = U - UMean
-
-        # interpolate data:
-        points = points / delta
-        zcoord = np.unique( points[:, 2] )
-        nz     = zcoord.shape[0]
-
-        if periodic == 'true':
-            nz = math.floor( nz/ 2 )
-            zcoord = zcoord[nz:]
-
-        zcoord[0]  = (zcoord[0] + zcoord[1])/2
-        zcoord[-1] = (zcoord[-1] + zcoord[-2])/2
-
-        ymin       = np.min( points[:, 1] )
-        ycoord     = np.linspace( ymin, yw, nPts )
-        ycoord[0]  = (ycoord[0] + ycoord[1])/2
-        ycoord[-1] = (ycoord[-1] + ycoord[-2])/2
-
-        zGrid, yGrid = np.meshgrid( zcoord, ycoord )
 
         upx = griddata( (points[:, 2], points[:, 1]), UPrime[:, 0],
                       (zGrid, yGrid), method='cubic' )
@@ -46,7 +65,7 @@ def get_two_point_corr(filePath, arrName, timeDirs, delta, yw, nPts, periodic):
         # number of points in y:
         ny = nPts
 
-        if i == 0:
+        if i == minT:
             tpcX = np.zeros([ny, nz])
             tpcY = np.zeros([ny, nz])
             tpcZ = np.zeros([ny, nz])
