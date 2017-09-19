@@ -66,45 +66,64 @@ def main():
         if not os.path.exists(caseDir):
             os.makedirs(caseDir)
 
-    Ruu, Rvv, Rww  = np.array([0]), np.array([0]), np.array([0])
-    ycoord, zcoord = np.array([0]), np.array([0])
-
     for i in range( nPlanes ):
-        if rank == 0:
-            print('    working on plane ' + str(i+1) + ' ...')
-        comm.Barrier()
-
         arrName = patchName + str(i+1)
-        Ruu, Rvv, Rww, ycoord, zcoord = get_two_point_corr(filePath, arrName,
-                                        timeDirs, delta, yw, nPts, periodic,
-                                        rank, localN)
+
+        points, yGrid, zGrid, ycoord, zcoord = get_grid(filePath, arrName,
+                                               timeDirs, delta, yw, nPts, periodic)
 
         comm.Barrier()
-        if rank == 0:
-            for i in range(size-1):
-                Ruu[0]    += Ruu[i+1]
-                Rvv[0]    += Rvv[i+1]
-                Rww[0]    += Rww[i+1]
 
-            Ruu    = Ruu[0] / size
-            Rvv    = Rvv[0] / size
-            Rww    = Rww[0] / size
+        recvbufRuu = None
+        recvbufRvv = None
+        recvbufRww = None
+        recvbufY   = None
+        recvbufZ   = None
+
+        if rank == 0:
+            print('\n   working on plane ' + str(i+1) + ' ...')
+            [ny, nz]   = yGrid.shape
+            recvbufRuu = np.empty([ny, nz], dtype='float64')
+            recvbufRvv = np.empty([ny, nz], dtype='float64')
+            recvbufRww = np.empty([ny, nz], dtype='float64')
+            recvbufY   = np.empty([ny], dtype='float64')
+            recvbufZ   = np.empty([nz], dtype='float64')
+
+        Ruu, Rvv, Rww = get_two_point_corr(filePath, arrName,
+                        timeDirs, points, yGrid, zGrid, periodic,
+                        rank, localN)
+
+        comm.Barrier()
+        comm.Reduce(Ruu, recvbufRuu, op=MPI.SUM, root=0)
+        comm.Reduce(Rvv, recvbufRvv, op=MPI.SUM, root=0)
+        comm.Reduce(Rww, recvbufRww, op=MPI.SUM, root=0)
+        comm.Reduce(ycoord, recvbufY, op=MPI.SUM, root=0)
+        comm.Reduce(zcoord, recvbufZ, op=MPI.SUM, root=0)
+
+        if rank == 0:
 
             fname = caseDir + '/Ruu_' + arrName + '.csv'
-            np.savetxt(fname, Ruu, fmt='%1.4e', delimiter=', ', newline='\n')
+            np.savetxt(fname, recvbufRuu / size, fmt='%1.4e', delimiter=', ',
+            newline='\n')
 
             fname = caseDir + '/Rvv_' + arrName + '.csv'
-            np.savetxt(fname, Rvv, fmt='%1.4e', delimiter=', ', newline='\n')
+            np.savetxt(fname, recvbufRvv / size, fmt='%1.4e', delimiter=', ',
+            newline='\n')
 
             fname = caseDir + '/Rww_' + arrName + '.csv'
-            np.savetxt(fname, Rww, fmt='%1.4e', delimiter=', ', newline='\n')
+            np.savetxt(fname, recvbufRww / size, fmt='%1.4e', delimiter=', ',
+            newline='\n')
 
             fname = caseDir + '/ycoord_' + arrName + '.csv'
-            np.savetxt(fname, ycoord, fmt='%1.4e', delimiter=', ', newline='\n')
+            np.savetxt(fname, recvbufY / size, fmt='%1.4e', delimiter=', ',
+            newline='\n')
 
             fname = caseDir + '/zcoord_' + arrName + '.csv'
-            np.savetxt(fname, zcoord, fmt='%1.4e', delimiter=', ', newline='\n')
+            np.savetxt(fname, recvbufZ / size, fmt='%1.4e', delimiter=', ',
+            newline='\n')
 
+    if rank == 0:
+        print('\n   Finished calculation ...')
 
 if __name__ == '__main__':
     main()
