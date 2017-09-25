@@ -21,13 +21,13 @@ def get_yplus(data, h, nu):
     zGrid, yGrid = np.meshgrid( zcoord, ycoord )
 
     tempUMean = griddata( (data[:, 2], data[:, 1]), data[:, 3],
-                   (zGrid, yGrid), method='linear')
+                   (zGrid, yGrid), method='cubic')
     umean = np.mean(tempUMean, axis=1)
     tempUMean = griddata( (data[:, 2], data[:, 1]), data[:, 4],
-                   (zGrid, yGrid), method='linear')
+                   (zGrid, yGrid), method='cubic')
     umean = np.append([umean], [np.mean( tempUMean, axis=1 )], axis=0)
     tempUMean = griddata( (data[:, 2], data[:, 1]), data[:, 5],
-                   (zGrid, yGrid), method='linear')
+                   (zGrid, yGrid), method='cubic')
     umean = np.append(umean, [np.mean( tempUMean, axis=1 )], axis=0)
 
     UMean = np.sqrt( np.sum( np.square(umean), axis=0 ) )
@@ -47,40 +47,40 @@ def get_spanwise_avg(data, yGrid, zGrid, h):
     # scalar data:
     if nCols == 4:
         qty = griddata( (data[:, 2], data[:, 1]), data[:, 3],
-                       (zGrid, yGrid), method='linear')
+                       (zGrid, yGrid), method='cubic')
         avg = np.mean( qty, axis=1 )
 
     # vector data:
     elif nCols == 6:
         qtyX = griddata( (data[:, 2], data[:, 1]), data[:, 3],
-                       (zGrid, yGrid), method='linear')
+                       (zGrid, yGrid), method='cubic')
         avg = np.mean( qtyX, axis=1 )
         qtyY = griddata( (data[:, 2], data[:, 1]), data[:, 4],
-                       (zGrid, yGrid), method='linear')
+                       (zGrid, yGrid), method='cubic')
         avg = np.append([avg], [np.mean( qtyY, axis=1 )], axis=0)
         qtyZ = griddata( (data[:, 2], data[:, 1]), data[:, 5],
-                       (zGrid, yGrid), method='linear')
+                       (zGrid, yGrid), method='cubic')
         avg = np.append(avg, [np.mean( qtyZ, axis=1 )], axis=0)
 
     # tensor data:
     elif nCols == 9:
         qtyXX = griddata( (data[:, 2], data[:, 1]), data[:, 3],
-                       (zGrid, yGrid), method='linear')
+                       (zGrid, yGrid), method='cubic')
         avg = np.mean( qtyXX, axis=1 )
         qtyXY = griddata( (data[:, 2], data[:, 1]), data[:, 4],
-                       (zGrid, yGrid), method='linear')
+                       (zGrid, yGrid), method='cubic')
         avg = np.append([avg], [np.mean( qtyXY, axis=1 )], axis=0)
         qtyXZ = griddata( (data[:, 2], data[:, 1]), data[:, 5],
-                       (zGrid, yGrid), method='linear')
+                       (zGrid, yGrid), method='cubic')
         avg = np.append(avg, [np.mean( qtyXZ, axis=1 )], axis=0)
         qtyYY = griddata( (data[:, 2], data[:, 1]), data[:, 6],
-                       (zGrid, yGrid), method='linear')
+                       (zGrid, yGrid), method='cubic')
         avg = np.append(avg, [np.mean( qtyYY, axis=1 )], axis=0)
         qtyYZ = griddata( (data[:, 2], data[:, 1]), data[:, 7],
-                       (zGrid, yGrid), method='linear')
+                       (zGrid, yGrid), method='cubic')
         avg = np.append(avg, [np.mean( qtyYZ, axis=1 )], axis=0)
         qtyZZ = griddata( (data[:, 2], data[:, 1]), data[:, 8],
-                       (zGrid, yGrid), method='linear')
+                       (zGrid, yGrid), method='cubic')
         avg = np.append(avg, [np.mean( qtyZZ, axis=1 )], axis=0)
 
 
