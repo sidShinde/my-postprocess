@@ -9,9 +9,16 @@ from .update_progress import *
 __all__ = ['get_two_point_corr', 'get_grid']
 
 def get_grid(filePath, arrName, timeDirs, delta, yw, nPts, periodic):
-    fpath = filePath + '/' + timeDirs[0] + '/' + arrName
+    readFile = False
+    count    = int( 0 )
 
-    points = get_data( fpath + '/faceCentres', skiprows=3 )
+    while (readFile == False):
+        try:
+            fpath = filePath + '/' + timeDirs[ count ] + '/' + arrName
+            points = get_data( fpath + '/faceCentres', skiprows=3 )
+            readFile = True
+        except:
+            count = count + 1
 
     # interpolate data:
     points = points / delta
@@ -52,14 +59,20 @@ def get_two_point_corr(filePath, arrName, timeDirs, points, yGrid, zGrid,
         fpath  = filePath + '/' + timeDirs[i] + '/' + arrName
 
         # interpolate velocity field:
-        U      = get_data( fpath + '/vectorField/U', skiprows=3)
-        UMean  = get_data( fpath + '/vectorField/UMean', skiprows=3)
+        try:
+            U     = get_data( fpath + '/vectorField/U', skiprows=3)
+            UMean = get_data( fpath + '/vectorField/UMean', skiprows=3)
+        except:
+            continue
+
         UPrime = U - UMean
 
         upx = griddata( (points[:, 2], points[:, 1]), UPrime[:, 0],
                       (zGrid, yGrid), method='cubic' )
+
         upy = griddata( (points[:, 2], points[:, 1]), UPrime[:, 1],
                       (zGrid, yGrid), method='cubic')
+
         upz = griddata( (points[:, 2], points[:, 1]), UPrime[:, 2],
                       (zGrid, yGrid), method='cubic')
 

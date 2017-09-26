@@ -48,7 +48,7 @@ def main():
     except:
         ValueError('\n insufficient time directories for averaging ...')
 
-    localN   = np.zeros(size)
+    localN   = np.zeros( size )
     # get number of time dirs per processor
     if rank == 0:
         quo, rem = divmod( nTimeDirs, size )
@@ -70,7 +70,8 @@ def main():
         arrName = patchName + str(i+1)
 
         points, yGrid, zGrid, ycoord, zcoord = get_grid(filePath, arrName,
-                                               timeDirs, delta, yw, nPts, periodic)
+                                               timeDirs, delta, yw, nPts,
+                                               periodic)
 
         comm.Barrier()
 
