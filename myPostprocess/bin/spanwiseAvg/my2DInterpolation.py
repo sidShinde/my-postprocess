@@ -14,7 +14,7 @@ def my2DInterpolation(x1, x2, data, x1Grid, x2Grid):
     oneD_x2_grid = x2Grid[:, 0]
     dataGrid = np.zeros((nx1, nx2))
 
-    for i in range( nx1 ):
+    for i in range( nx2 ):
         x1Point = x1Grid[1, i]
 
         # get 1D data for x1 = x1Point
@@ -27,7 +27,6 @@ def my2DInterpolation(x1, x2, data, x1Grid, x2Grid):
     return dataGrid
 
 def get1Ddata(x1, x2, data, x1Point):
-    x2, data = list(), list()
     dataMat = np.vstack( (x1, x2) )
     dataMat = np.vstack( (dataMat, data) )
     dataMat = dataMat.T

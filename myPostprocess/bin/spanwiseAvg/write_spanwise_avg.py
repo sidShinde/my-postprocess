@@ -101,13 +101,13 @@ def main():
             if avg.ndim == 1:
                 solution = np.append(solution, [avg], axis=0)
                 hLine = 'y/h, y+, ' + qty[i] + '_avg'
+
             elif avg.ndim == 2 and avg.shape[1] == 3:
-                #solution = np.concatenate((solution, avg), axis=0)
                 solution = np.append(solution, avg.T, axis=0)
                 hLine = 'y/h, y+, ' + qty[i] + '_avg_x, ' + \
                         qty[i] + '_avg_y, ' + qty[i] + '_avg_z'
+
             elif avg.ndim == 2 and avg.shape[1] == 6:
-                #solution = np.concatenate((solution, avg), axis=0)
                 solution = np.append(solution, avg.T, axis=0)
                 hLine = 'y/h, y+, ' + qty[i] + '_avg_xx, ' + \
                         qty[i] + '_avg_xy, ' + qty[i] + '_avg_xz, ' + \
