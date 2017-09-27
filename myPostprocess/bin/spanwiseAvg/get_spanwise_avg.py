@@ -2,7 +2,6 @@ import numpy as np
 import os
 from tqdm import tqdm
 from scipy.interpolate import griddata
-from .my2DInterpolation import *
 
 __all__ = ['get_yplus', 'get_spanwise_avg']
 
@@ -33,7 +32,7 @@ def get_yplus(data, h, nu):
     umean = np.append(umean, [np.mean( tempUMean, axis=1 )], axis=0)
 
     UMean = np.sqrt( np.sum( np.square(umean), axis=0 ) )
-    du_dy = UMean[0]/ycoord[0]
+    du_dy = UMean[0]/(ycoord[0]*h)
     utau  = np.sqrt( nu*du_dy )
 
     yplus = ycoord*(h*utau/nu)
