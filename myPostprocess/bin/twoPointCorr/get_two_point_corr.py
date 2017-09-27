@@ -54,6 +54,7 @@ def get_two_point_corr(filePath, arrName, timeDirs, points, yGrid, zGrid,
         minT = int( np.sum( localN[:rank] ) )
 
     maxT = int( np.sum( localN[:rank+1] ) )
+    skippedFiles = 0
 
     for i in range( minT, maxT ):
         fpath  = filePath + '/' + timeDirs[i] + '/' + arrName
@@ -63,6 +64,7 @@ def get_two_point_corr(filePath, arrName, timeDirs, points, yGrid, zGrid,
             U     = get_data( fpath + '/vectorField/U', skiprows=3)
             UMean = get_data( fpath + '/vectorField/UMean', skiprows=3)
         except:
+            skippedFiles += 1
             continue
 
         UPrime = U - UMean
@@ -96,9 +98,9 @@ def get_two_point_corr(filePath, arrName, timeDirs, points, yGrid, zGrid,
         if rank == 0:
             update_progress( (i+1) / (maxT) )
 
-    tpcX = tpcX/(maxT-minT)
-    tpcY = tpcY/(maxT-minT)
-    tpcZ = tpcZ/(maxT-minT)
+    tpcX = tpcX/(maxT - minT - skippedFiles)
+    tpcY = tpcY/(maxT - minT - skippedFiles)
+    tpcZ = tpcZ/(maxT - minT - skippedFiles)
 
     return tpcX, tpcY, tpcZ
 
