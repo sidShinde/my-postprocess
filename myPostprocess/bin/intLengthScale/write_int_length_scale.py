@@ -23,7 +23,7 @@ def main():
 
     # read data from configFile
     filePath = os.getcwd()
-    filePath = filePath + '/postProcessing/vgAnalysis' \
+    filePath = filePath + '/postProcessing/my-postprocess' \
                '/twoPointCorrData'
 
     patchName = configDict['patchName']
