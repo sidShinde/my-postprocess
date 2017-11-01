@@ -1,7 +1,6 @@
 build
 dist
 myPostprocess.egg-info
-myPostprocess/__pycache__
-myPostprocess/readers/__pycache__
+__pycache__/
 
 *~
