@@ -1,8 +1,8 @@
 import numpy as np
 import os
 import argparse
-from vgAnalysis.readers.reader_support_functions import *
-from vgAnalysis.readers.reader import *
+from myPostprocess.readers.reader_support_functions import *
+from myPostprocess.readers.reader import *
 from .get_sgs_tke_per_unit_area import *
 
 def main():

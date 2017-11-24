@@ -82,14 +82,19 @@ def config_to_dict(configFile):
     '''
     Parse a config file to dictionary
     '''
-
     configDict = {}
+
     for line in configFile:
-        # if comment or newline:
+
         if (line[0] == '#') or (line == '\n'):
             continue
-        # read data:
         else:
-            configDict[line.split()[0]] = line.split()[1]
-
+            if '{' in line:
+                configDict[line.split('{')[0]] = \
+                           read_between_brackets(configFile)
+            else:
+                configDict[line.split()[0]] = line.split()[1]
+    
     return configDict
+
+                

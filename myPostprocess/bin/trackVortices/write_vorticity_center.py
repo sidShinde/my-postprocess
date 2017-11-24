@@ -1,8 +1,8 @@
 import numpy as np
 import os
 import argparse
-from vgAnalysis.readers.reader_support_functions import *
-from vgAnalysis.readers.reader import *
+from myPostprocess.readers.reader_support_functions import *
+from myPostprocess.readers.reader import *
 from .track_vorticity import *
 
 def main():

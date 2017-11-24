@@ -1,8 +1,9 @@
-# number of planes
-nPlanes           1
-
-# name of the plane
-patchName         xNormal
+# list of plane names:
+planeNames{
+xNormal1,
+xNormal2,
+yNormal2
+}
 
 # boundary layer thickness [m]
 delta             0.01

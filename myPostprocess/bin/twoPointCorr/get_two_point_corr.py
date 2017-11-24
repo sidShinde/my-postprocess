@@ -2,8 +2,8 @@ import numpy as np
 import os, math
 from tqdm import tqdm
 from scipy.interpolate import griddata
-from vgAnalysis.readers.reader_support_functions import *
-from vgAnalysis.readers.reader import *
+from myPostprocess.readers.reader_support_functions import *
+from myPostprocess.readers.reader import *
 from .update_progress import *
 
 __all__ = ['get_two_point_corr', 'get_grid']
@@ -70,13 +70,13 @@ def get_two_point_corr(filePath, arrName, timeDirs, points, yGrid, zGrid,
         UPrime = U - UMean
 
         upx = griddata( (points[:, 2], points[:, 1]), UPrime[:, 0],
-                      (zGrid, yGrid), method='cubic' )
+                      (zGrid, yGrid), method='linear' )
 
         upy = griddata( (points[:, 2], points[:, 1]), UPrime[:, 1],
-                      (zGrid, yGrid), method='cubic')
+                      (zGrid, yGrid), method='linear')
 
         upz = griddata( (points[:, 2], points[:, 1]), UPrime[:, 2],
-                      (zGrid, yGrid), method='cubic')
+                      (zGrid, yGrid), method='linear')
 
         # number of points in y:
         [ny, nz] = yGrid.shape

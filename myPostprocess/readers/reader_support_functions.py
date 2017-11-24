@@ -2,7 +2,8 @@ import numpy as np
 import re
 import os
 
-__all__=['get_columns', 'get_indices_npts', 'get_time_dir', 'is_number', 'get_number_of_cols']
+__all__=['get_columns', 'get_indices_npts', 'get_time_dir', 'is_number',
+         'get_number_of_cols', 'read_between_brackets']
 
 
 def get_columns(dir1, dir2):
@@ -121,3 +122,17 @@ def get_number_of_cols(fname, skiprows=0):
             else: continue
 
     return nCols
+
+
+def read_between_brackets(configFile):
+    strList = list()
+
+    for line in configFile:
+        if '}' in line:
+            break
+        else:
+            line = line.strip()
+            words = line.split(',')
+            strList.append(words[0])
+
+    return strList

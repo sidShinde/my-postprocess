@@ -1,8 +1,8 @@
 import numpy as np
 import os
 from tqdm import tqdm
-from vgAnalysis.readers.reader_support_functions import *
-from vgAnalysis.readers.reader import *
+from myPostprocess.readers.reader_support_functions import *
+from myPostprocess.readers.reader import *
 
 __all__=['get_tke_std_dev']
 
