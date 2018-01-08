@@ -47,7 +47,8 @@ def main():
     nPlanes   = int( configDict['nPlanes'] )
 
     caseDir = os.getcwd()
-    caseDir = caseDir + '/postProcessing/my-postprocess/spanwiseAvg'
+    caseDir = caseDir + '/postProcessing/my-postprocess/spanwiseAvg/' + \
+              str(tDir)
     if not os.path.exists(caseDir):
         os.makedirs(caseDir)
 
