@@ -30,15 +30,15 @@ def main():
         configDict = config_to_dict(configFile)
         configFile.close()
 
-        caseDir = os.getcwd()
-        filePath = caseDir + '/postProcessing/cuttingPlane'
     else:
         configDict = None
         filePath   = None
 
     if size > 0:
-        filePath   = comm.bcast(filePath, root=0)
         configDict = comm.bcast(configDict, root=0)
+
+    caseDir = os.getcwd()
+    filePath = caseDir + '/postProcessing/cuttingPlane'
 
     planeNames = configDict['planeNames']
     delta      = float( configDict['delta'] )
