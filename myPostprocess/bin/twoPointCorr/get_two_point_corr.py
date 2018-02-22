@@ -25,27 +25,38 @@ def get_grid(filePath, arrName, timeDirs, delta, yw, nPts, periodic):
     zcoord = np.unique( points[:, 2] )
     nz     = zcoord.shape[0]
 
+    #idx    = [0, 1, 2, 3, nz-3, nz-2, nz-1, nz]
+    rNz    = int( 0.08 * nz )
+    idx1   = np.arange( rNz )
+    idx2   = (nz-1) - rNz - np.arange( rNz )
+    zcoord = np.delete(zcoord, idx1)
+    zcoord = np.delete(zcoord, idx2)
+    
+    minZ   = zcoord.min()
+    maxZ   = zcoord.max()
+    nDelta = (maxZ - minZ)
+    nz     = int( nDelta * 60 )  
+
+    zcoord = np.linspace( minZ, maxZ, nz )
+    
     if periodic == 'true':
         nz = math.floor( nz/ 2 )
         zcoord = zcoord[nz:]
 
-    zcoord[0]  = (zcoord[0] + zcoord[1])/2
-    zcoord[-1] = (zcoord[-1] + zcoord[-2])/2
-
-    ymin       = np.min( points[:, 1] )
-    ycoord     = np.linspace( ymin, yw, nPts )
-    ycoord[0]  = (ycoord[0] + ycoord[1])/2
-    ycoord[-1] = (ycoord[-1] + ycoord[-2])/2
-
+    tempY      = np.unique( points[:, 1] )
+    ymin       = tempY[2]
+    ycoord     = np.linspace( ymin, ymin+yw, nPts )
+    
     zGrid, yGrid = np.meshgrid( zcoord, ycoord )
 
     if periodic == 'true':
         zcoord = zcoord - zcoord[0]
 
-    return points, yGrid, zGrid, ycoord, zcoord
+    return yGrid, zGrid, ycoord, zcoord
 
 
-def get_two_point_corr(filePath, arrName, timeDirs, points, yGrid, zGrid,
+def get_two_point_corr(filePath, arrName, timeDirs, 
+                       delta, yGrid, zGrid,
                        periodic, rank, localN):
 
     if rank == 0:
@@ -53,7 +64,7 @@ def get_two_point_corr(filePath, arrName, timeDirs, points, yGrid, zGrid,
     else:
         minT = int( np.sum( localN[:rank] ) )
 
-    maxT = int( np.sum( localN[:rank+1] ) )
+    maxT = int( minT + localN[rank] )
     skippedFiles = 0
 
     for i in range( minT, maxT ):
@@ -61,16 +72,27 @@ def get_two_point_corr(filePath, arrName, timeDirs, points, yGrid, zGrid,
 
         # interpolate velocity field:
         try:
+            points = get_data( fpath + '/faceCentres', skiprows=3 )
             U     = get_data( fpath + '/vectorField/U', skiprows=3)
             UMean = get_data( fpath + '/vectorField/UMean', skiprows=3)
         except:
             skippedFiles += 1
             continue
 
+        points /= delta
         UPrime = U - UMean
 
         upx = griddata( (points[:, 2], points[:, 1]), UPrime[:, 0],
                       (zGrid, yGrid), method='linear' )
+
+        # check if Nan's are present:
+        nanInd = np.isnan( upx )==True
+        nNan   = upx[nanInd].size
+        if nNan > 0:
+            #print('\n   upx = \n', upx[:2, :], '\n', upx[-2:, :])
+
+            raise ValueError('\n   Nan PRESENT ...')
+            break
 
         upy = griddata( (points[:, 2], points[:, 1]), UPrime[:, 1],
                       (zGrid, yGrid), method='linear')

@@ -49,10 +49,13 @@ def main():
     # get list of time-dirs
     nTimeDirs = int( configDict['nTimeDirs'] )
     timeDirs  = np.sort( os.listdir(filePath) )
-    try:
-        timeDirs  = timeDirs[timeDirs.size - nTimeDirs:]
-    except:
-        ValueError('\n insufficient time directories for averaging ...')
+
+    if timeDirs.size < nTimeDirs:
+        print('\n   using all available snapshots ...')
+        nTimeDirs = timeDirs.size
+
+    np.random.shuffle( timeDirs )
+    timeDirs = timeDirs[:nTimeDirs]    
 
     localN   = np.zeros( size )
     # get number of time dirs per processor
@@ -70,7 +73,7 @@ def main():
 
     for i, arrName in enumerate( planeNames ):
         
-        points, yGrid, zGrid, ycoord, zcoord = get_grid(filePath, arrName,
+        yGrid, zGrid, ycoord, zcoord = get_grid(filePath, arrName,
                                                         timeDirs, delta, yw, nPts,
                                                         periodic)
 
@@ -88,7 +91,7 @@ def main():
             recvbufRww = np.empty([ny, nz], dtype='float64')
 
         Ruu, Rvv, Rww = get_two_point_corr(filePath, arrName,
-                        timeDirs, points, yGrid, zGrid, periodic,
+                        timeDirs, delta, yGrid, zGrid, periodic,
                         rank, localN)
         
         comm.Barrier()
