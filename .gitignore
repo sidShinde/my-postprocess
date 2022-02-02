@@ -2,5 +2,6 @@ build
 dist
 myPostprocess.egg-info
 __pycache__/
+mp_env/
 
 *~
